@@ -12,6 +12,8 @@ from utils.save_csv_from_judge_db import save_csv_from_judge_db
 from utils.transform_to_ccclub_db_schema import transform_to_ccclub_db_schema
 from utils.insert_csv_to_ccclub_db import insert_csv_to_ccclub_db
 
+from transform.contest import transform_contest
+
 # Set the timezone, otherwise it might be UTC
 local_tz = pendulum.timezone("Asia/Taipei")
 
@@ -47,7 +49,7 @@ with DAG(
     transform = PythonOperator(
         task_id="transform_to_ccclub_db_schema",
         python_callable=transform_to_ccclub_db_schema,
-        op_args=["/opt/airflow/dags/sql/transform_contest.sql"],
+        op_args=[transform_contest],
         provide_context=True,
         dag=dag
     )
