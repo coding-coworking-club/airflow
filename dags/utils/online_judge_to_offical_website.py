@@ -14,8 +14,7 @@ def connect_to_judge_db():
         postgres_conn_id="postgres_onlinejudge",  # NOTE: host="localhost"
         schema="onlinejudge"
     )
-    pg_cursor = pg_hook.get_conn().cursor()
-    return pg_cursor
+    return pg_hook
 
 
 def connect_to_local_ccclub_db():
@@ -24,5 +23,4 @@ def connect_to_local_ccclub_db():
         postgres_conn_id="postgres_local_ccclub",  # NOTE: host="host.docker.internal"
         schema="ccclub"
     )
-    pg_cursor = pg_hook.get_conn().cursor()
-    return pg_cursor
+    return pg_hook
