@@ -23,7 +23,7 @@ def save_csv_from_judge_db(sql, **context):
     s3_hook = S3Hook(aws_conn_id="s3_airflow_data")
     s3_hook.load_file(
         filename='data/raw.csv',
-        key='raw.csv',
+        key='data/raw.csv',
         bucket_name="ccclub-airflow-data",
         replace=True
     )
