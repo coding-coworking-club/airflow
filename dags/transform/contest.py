@@ -10,7 +10,7 @@ def transform_contest(context):
 
     # assemble result dataframe
     result_df = pd.DataFrame()
-    result_df['course_id'] = [16] * raw_df_length
+    result_df['course_id'] = [18] * raw_df_length
     result_df['type'] = [
         'EXERCISE' if '隨堂練習' in i else 'HOMEWORK' for i in raw_df['description']]
     result_df['judge_contest_id'] = raw_df['id']
