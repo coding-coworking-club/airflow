@@ -12,15 +12,19 @@ def insert_csv_to_ccclub_db(sql, **context):
     cur = conn.cursor()
 
     # download result csv from s3
+    filename = sql.split('/')[-1].split('.')[0].split('_')[-1]
     s3_hook = S3Hook(aws_conn_id="s3_airflow_data")
     result_csv_path = s3_hook.download_file(
-        key='result.csv',
+        key=f'result/{filename}.csv',
         bucket_name="ccclub-airflow-data",
     )
 
-    # copy result csv to ccclub db
+    # insert result csv into ccclub db
     # TODO: avoid duplicate
-    copy_result_csv = Path(sql).read_text()
-    with open(result_csv_path, 'r') as f:
-        cur.copy_expert(copy_result_csv, f)
+    df = pd.read_csv(result_csv_path)
+    query_cmd = Path(sql).read_text()
+    for index, row in df.iterrows():
+        record_to_insert = (row['course_id'], row['type'], row['judge_contest_id'], row['name'],
+                            row['start_time'], row['end_time'], row['create_time'], row['update_time'])
+        cur.execute(query_cmd, record_to_insert)
         conn.commit()
