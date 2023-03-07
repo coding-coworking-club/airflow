@@ -24,3 +24,18 @@ def connect_to_local_ccclub_db():
         schema="ccclub"
     )
     return pg_hook
+
+
+def connect_to_prod_ccclub_db():
+    # Open SSH tunnel
+    ssh_hook = SSHHook(ssh_conn_id="ssh_prod_ccclub_db", keepalive_interval=60)
+    tunnel = ssh_hook.get_tunnel(
+        5432, remote_host="localhost", local_port=5432)
+    tunnel.start()
+
+    # Connect to DB
+    pg_hook = PostgresHook(
+        postgres_conn_id="postgres_prod_ccclub",  # NOTE: host="localhost"
+        schema="ccclub"
+    )
+    return pg_hook
