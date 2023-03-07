@@ -11,15 +11,15 @@ def transform_to_ccclub_db_schema(transform_func, **context):
     result_df = transform_func(context)
 
     # export csv
-    result_df.to_csv(f'data/result_{filename}.csv', index=False)
-    result_csv_path = os.path.abspath(f'data/result_{filename}.csv')
+    result_df.to_csv(f'result/{filename}.csv', index=False)
+    result_csv_path = os.path.abspath(f'result/{filename}.csv')
     context['ti'].xcom_push(key='result_csv_path', value=result_csv_path)
 
     # upload result csv to s3
     s3_hook = S3Hook(aws_conn_id="s3_airflow_data")
     s3_hook.load_file(
-        filename=f'data/result_{filename}.csv',
-        key=f'data/result_{filename}.csv',
+        filename=f'result/{filename}.csv',
+        key=f'result/{filename}.csv',
         bucket_name="ccclub-airflow-data",
         replace=True
     )

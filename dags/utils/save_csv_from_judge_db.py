@@ -20,13 +20,13 @@ def save_csv_from_judge_db(sql, **context):
     # save raw csv
     col_names = [i[0] for i in pg_cursor.description]
     raw_df = pd.DataFrame.from_records(results, columns=col_names)
-    raw_df.to_csv(f'data/raw_{filename}.csv', index=False)
+    raw_df.to_csv(f'raw/{filename}.csv', index=False)
     s3_hook = S3Hook(aws_conn_id="s3_airflow_data")
     s3_hook.load_file(
-        filename=f'data/raw_{filename}.csv',
-        key=f'data/raw_{filename}.csv',
+        filename=f'raw/{filename}.csv',
+        key=f'raw/{filename}.csv',
         bucket_name="ccclub-airflow-data",
         replace=True
     )
-    raw_csv_path = os.path.abspath(f'data/raw_{filename}.csv')
+    raw_csv_path = os.path.abspath(f'raw/{filename}.csv')
     context['ti'].xcom_push(key='raw_csv_path', value=raw_csv_path)
