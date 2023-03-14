@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from pathlib import Path
 import pandas as pd
 
@@ -19,14 +20,15 @@ def save_csv_from_judge_db(sql, **context):
 
     # save raw csv
     col_names = [i[0] for i in pg_cursor.description]
+    today_str = datetime.today().strftime('%Y%m%d')
     raw_df = pd.DataFrame.from_records(results, columns=col_names)
-    raw_df.to_csv(f'raw/{filename}.csv', index=False)
+    raw_df.to_csv(f'raw/{filename}_{today_str}.csv', index=False)
     s3_hook = S3Hook(aws_conn_id="s3_airflow_data")
     s3_hook.load_file(
-        filename=f'raw/{filename}.csv',
-        key=f'raw/{filename}.csv',
+        filename=f'raw/{filename}_{today_str}.csv',
+        key=f'raw/{filename}_{today_str}.csv',
         bucket_name="ccclub-airflow-data",
         replace=True
     )
-    raw_csv_path = os.path.abspath(f'raw/{filename}.csv')
+    raw_csv_path = os.path.abspath(f'raw/{filename}_{today_str}.csv')
     context['ti'].xcom_push(key='raw_csv_path', value=raw_csv_path)
