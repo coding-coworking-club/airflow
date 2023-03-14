@@ -16,13 +16,12 @@ x-airflow-common:
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth'
     _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
   volumes:
-    - ./dags:/opt/airflow/dags
+    - ./app/dags:/opt/airflow/dags
+    - ./app/plugins:/opt/airflow/plugins
     - ./logs:/opt/airflow/logs
     - ./raw:/opt/airflow/raw
     - ./result:/opt/airflow/result
-    - ./plugins:/opt/airflow/plugins
     - ./credentials:/opt/airflow/credentials
-    - ./config:/opt/airflow/config
   user: "${AIRFLOW_UID:-50000}:0"
   env_file: .env
   depends_on:

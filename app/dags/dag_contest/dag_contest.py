@@ -7,11 +7,11 @@ import pendulum
 from airflow.operators.dummy import DummyOperator
 from airflow.operators.python import PythonOperator
 
-from utils.save_csv_from_judge_db import save_csv_from_judge_db
-from utils.transform_to_ccclub_db_schema import transform_to_ccclub_db_schema
-from utils.insert_csv_to_ccclub_db import insert_csv_to_ccclub_db
+from dag_contest.tasks.save_csv_from_judge_db import save_csv_from_judge_db
+from dag_contest.tasks.transform_to_ccclub_db_schema import transform_to_ccclub_db_schema
+from dag_contest.tasks.insert_csv_to_ccclub_db import insert_csv_to_ccclub_db
 
-from transform.contest import transform_contest
+from dag_contest.templates.s3.raw_to_result.contest import transform_contest
 
 # Set the timezone, otherwise it might be UTC
 local_tz = pendulum.timezone("Asia/Taipei")
@@ -42,7 +42,9 @@ with DAG(
     select = PythonOperator(
         task_id="save_csv_from_judge_db",
         python_callable=save_csv_from_judge_db,
-        op_args=["/opt/airflow/dags/sql/select_contest.sql"],
+        op_args=[
+            "/opt/airflow/dags/dag_contest/templates/s3/source_to_raw/select_contest.sql"],
+        # op_args=["/opt/airflow/dags/sql/select_contest.sql"],
         provide_context=True,
         dag=dag
     )
@@ -56,7 +58,8 @@ with DAG(
     insert = PythonOperator(
         task_id="insert_csv_to_ccclub_db",
         python_callable=insert_csv_to_ccclub_db,
-        op_args=["/opt/airflow/dags/sql/insert_contest.sql"],
+        op_args=[
+            "/opt/airflow/dags/dag_contest/templates/s3/result_to_target/insert_contest.sql"],
         provide_context=True,
         dag=dag
     )
