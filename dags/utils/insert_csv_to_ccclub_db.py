@@ -2,7 +2,7 @@ from pathlib import Path
 import pandas as pd
 from datetime import datetime
 
-from utils.online_judge_to_offical_website import connect_to_local_ccclub_db
+from utils.connection import connect_to_local_ccclub_db
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 
 

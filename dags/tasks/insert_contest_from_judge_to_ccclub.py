@@ -18,6 +18,7 @@ local_tz = pendulum.timezone("Asia/Taipei")
 
 default_args = {
     "owner": "ccclub",
+    # TODO: configure smtp server
     # "email": ["fake_email@gmail.com", "fake_email_2@gmail.com"],
     "email_on_retry": False,
     "email_on_failure": True,
@@ -29,7 +30,7 @@ default_args = {
 
 
 with DAG(
-    dag_id="insert_judge_data_into_ccclub_db",
+    dag_id="insert_contest_from_judge_to_ccclub",
     default_args=default_args,
     start_date=datetime(2021, 7, 10, 0, 0, 0, 0, tzinfo=local_tz),
     schedule_interval="0 0 * * *",
