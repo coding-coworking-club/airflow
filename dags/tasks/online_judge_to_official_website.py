@@ -1,8 +1,7 @@
 from airflow import DAG
-from airflow.models import Variable
-from datetime import datetime   # Declare date time
-from datetime import timedelta  # Declare the change of time
-import pendulum                 # Declare timezone
+from datetime import datetime
+from datetime import timedelta
+import pendulum
 
 # Operators
 from airflow.operators.dummy import DummyOperator
